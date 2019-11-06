@@ -155,10 +155,6 @@ func unmarshalStrategySpec(csv *csvv1.ClusterServiceVersion) *csvStrategySpec {
 				Name:  "NOOBAA_DB_IMAGE",
 				Value: *noobaaDBContainerImage,
 			},
-			{
-				Name:  "MON_COUNT_OVERRIDE",
-				Value: "3",
-			},
 		}
 
 		// append to env var list.
@@ -222,8 +218,8 @@ func unmarshalStrategySpec(csv *csvv1.ClusterServiceVersion) *csvStrategySpec {
 				Name:  "ROOK_DISABLE_DEVICE_HOTPLUG",
 				Value: "true",
 			},
-		    {
-				Name: "CSI_PROVISIONER_NODE_AFFINITY",
+			{
+				Name:  "CSI_PROVISIONER_NODE_AFFINITY",
 				Value: "cluster.ocs.openshift.io/openshift-storage=",
 			},
 			{
