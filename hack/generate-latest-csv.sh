@@ -13,13 +13,32 @@ export CSV_CHECKSUM_OUTFILE="hack/latest-csv-checksum.md5"
 export CSV_VERSION=4.4.0
 export REPLACES_CSV_VERSION=${REPLACES_CSV_VERSION:-"4.3.0"}
 
+export OCS_OP_TAG=$(cat tags/ocs-op.txt|head -n 1|tee /dev/tty)
+[[ -z OCS_OP_TAG ]] && return 1
+
+export ROOK_OP_TAG=$(cat tags/rook-op.txt|head -n 1|tee /dev/tty)
+[[ -z ROOK_OP_TAG ]] && return 1
+
+
+## upstream
+#export ROOK_IMAGE="index.docker.io/rook/ceph:v1.2.0"
+#export OCS_IMAGE="quay.io/ocs-dev/ocs-operator:latest"
+
+
+## dev
+export ROOK_IMAGE="index.docker.io/rohantmp/rook-dev:latest"
+export OCS_IMAGE="index.docker.io/rohantmp/ocs-operator:latest"
+
+## downstream
+# export ROOK_IMAGE="quay.io/rhceph-dev/rook-ceph:${ROOK_OP_TAG}"
+# export OCS_IMAGE="quay.io/rhceph-dev/ocs-operator:${OCS_OP_TAG}"
+
+
 # Current dependency images our DEV CSV are pinned to
-export ROOK_IMAGE=${ROOK_IMAGE:-"rook/ceph:v1.2.4"}
 export NOOBAA_IMAGE=${NOOBAA_IMAGE:-"noobaa/noobaa-operator:2.0.9"}
 export NOOBAA_CORE_IMAGE=${NOOBAA_CORE_IMAGE:-"noobaa/noobaa-core:5.2.11"}
 export NOOBAA_DB_IMAGE=${NOOBAA_DB_IMAGE:-"centos/mongodb-36-centos7"}
 export CEPH_IMAGE=${CEPH_IMAGE:-"ceph/ceph:v14.2"}
-export OCS_IMAGE=${OCS_IMAGE:-"${IMAGE_REGISTRY}/${REGISTRY_NAMESPACE}/${OPERATOR_IMAGE_NAME}:${IMAGE_TAG}"}
 
 echo "=== Generating DEV CSV with the following vars ==="
 echo -e "\tCSV_VERSION=$CSV_VERSION"

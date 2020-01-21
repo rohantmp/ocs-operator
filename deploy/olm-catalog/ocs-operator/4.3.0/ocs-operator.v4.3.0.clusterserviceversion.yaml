@@ -1149,14 +1149,14 @@ spec:
                 - name: OPERATOR_NAME
                   value: ocs-operator
                 - name: ROOK_CEPH_IMAGE
-                  value: rook/ceph:v1.2.4
+                  value: index.docker.io/rohantmp/rook-dev:latest
                 - name: CEPH_IMAGE
                   value: ceph/ceph:v14.2
                 - name: NOOBAA_CORE_IMAGE
                   value: noobaa/noobaa-core:5.2.11
                 - name: NOOBAA_DB_IMAGE
                   value: centos/mongodb-36-centos7
-                image: quay.io/ocs-dev/ocs-operator:latest
+                image: index.docker.io/rohantmp/ocs-operator:latest
                 imagePullPolicy: Always
                 name: ocs-operator
                 ports:
@@ -1252,7 +1252,8 @@ spec:
                       fieldPath: metadata.namespace
                 - name: CSI_ENABLE_SNAPSHOTTER
                   value: "false"
-                image: rook/ceph:v1.2.4
+                image: index.docker.io/rohantmp/rook-dev:latest
+                imagePullPolicy: Always
                 name: rook-ceph-operator
                 resources: {}
                 volumeMounts:
