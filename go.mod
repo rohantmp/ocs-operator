@@ -11,7 +11,9 @@ require (
 	github.com/go-logr/logr v0.1.0
 	github.com/go-logr/zapr v0.1.1
 	github.com/go-openapi/spec v0.19.2
-	github.com/noobaa/noobaa-operator/v2 v2.0.6-0.20200219114615-8ae457e831e4
+	github.com/go-openapi/validate v0.18.0 // indirect
+	github.com/kube-object-storage/lib-bucket-provisioner v0.0.0-20191209225510-8423df408133 // indirect
+	github.com/noobaa/noobaa-operator/v2 v2.0.8
 	github.com/onsi/ginkgo v1.10.1
 	github.com/onsi/gomega v1.7.0
 	github.com/openshift/api v3.9.1-0.20190904155310-a25bb2adc83e+incompatible
