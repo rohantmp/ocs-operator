@@ -16,9 +16,13 @@ spec:
   - JSONPath: .metadata.creationTimestamp
     name: Age
     type: date
-  - JSONPath: .status.state
-    description: Current State
-    name: State
+  - JSONPath: .status.phase
+    description: Phase
+    name: Phase
+    type: string
+  - JSONPath: .status.message
+    description: Message
+    name: Message
     type: string
   - JSONPath: .status.ceph.health
     description: Ceph Health
@@ -122,12 +126,6 @@ spec:
                   type: string
                 devicePathFilter:
                   type: string
-                directories:
-                  items:
-                    properties:
-                      path:
-                        type: string
-                  type: array
                 disruptionManagement:
                   properties:
                     machineDisruptionBudgetNamespace:
@@ -168,12 +166,6 @@ spec:
                           properties:
                             config: {}
                             name:
-                              type: string
-                        type: array
-                      directories:
-                        items:
-                          properties:
-                            path:
                               type: string
                         type: array
                       name:

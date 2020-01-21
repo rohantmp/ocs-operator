@@ -2,8 +2,8 @@
 
 set -e
 
-IMAGE_REGISTRY="${IMAGE_REGISTRY:-quay.io}"
-REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE:-}"
+IMAGE_REGISTRY="index.docker.io"
+REGISTRY_NAMESPACE="rohantmp"
 IMAGE_NAME="ocs-registry"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 IMAGE_BUILD_CMD="${IMAGE_BUILD_CMD:-docker}"

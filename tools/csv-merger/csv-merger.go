@@ -172,7 +172,7 @@ func unmarshalStrategySpec(csv *csvv1.ClusterServiceVersion) *csvStrategySpec {
 			},
 			{
 				Name:  "MON_COUNT_OVERRIDE",
-				Value: "3",
+				Value: "1",
 			},
 		}
 
