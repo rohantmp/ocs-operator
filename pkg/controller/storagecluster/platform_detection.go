@@ -35,10 +35,6 @@ type CloudPlatform struct {
 
 // GetPlatform is used to get the CloudPlatformType of the running cluster
 func (p *CloudPlatform) GetPlatform(c client.Client) (CloudPlatformType, error) {
-	// if 'platform' is already set just return it
-	if p.platform != "" {
-		return p.platform, nil
-	}
 	p.mux.Lock()
 	defer p.mux.Unlock()
 	if !isValidCloudPlatform(p.platform) {
@@ -67,6 +63,8 @@ func (p *CloudPlatform) getPlatform(c client.Client) (CloudPlatformType, error) 
 	return p.platform, nil
 }
 
+// for cache invalidation only
+// do not use to distinguish platforms.
 func isValidCloudPlatform(p CloudPlatformType) bool {
 	if p == PlatformUnknown {
 		return true
@@ -75,6 +73,14 @@ func isValidCloudPlatform(p CloudPlatformType) bool {
 		if p == cp {
 			return true
 		}
+	}
+	return false
+}
+
+// IsKnownCloudPlatform checks that the cloudplatform is valid and not unkown.
+func IsKnownCloudPlatform(p CloudPlatformType) bool {
+	if p != PlatformUnknown && isValidCloudPlatform(p) {
+		return true
 	}
 	return false
 }

@@ -269,7 +269,7 @@ func (r *ReconcileStorageCluster) newStorageClasses(initData *ocsv1.StorageClust
 	// OR
 	// b. current platform is not a cloud-based platform
 	platform, err := r.platform.GetPlatform(r.client)
-	if initData.Spec.ExternalStorage.Enable || err == nil && !isValidCloudPlatform(platform) {
+	if initData.Spec.ExternalStorage.Enable || err == nil && !IsKnownCloudPlatform(platform) {
 		ret = append(ret, r.newOBCStorageClass(initData))
 	}
 	return ret, nil
@@ -285,8 +285,8 @@ func (r *ReconcileStorageCluster) ensureCephObjectStores(instance *ocsv1.Storage
 	if err != nil {
 		return err
 	}
-	if isValidCloudPlatform(platform) {
-		reqLogger.Info(fmt.Sprintf("not creating a CephObjectStore because the platform is '%s'", platform))
+	if IsKnownCloudPlatform(platform) {
+		r.reqLogger.Info("not creating a CephObjectStore", "cluster.Platform", platform)
 		return nil
 	}
 
@@ -448,7 +448,8 @@ func (r *ReconcileStorageCluster) ensureCephObjectStoreUsers(instance *ocsv1.Sto
 	if err != nil {
 		return err
 	}
-	if platform == PlatformAWS {
+	if IsKnownCloudPlatform(platform) {
+		r.reqLogger.Info("not creating a CephObjectStoreUser", "cluster.Platform", platform)
 		return nil
 	}
 

@@ -149,8 +149,7 @@ func initStorageClusterResourceCreateUpdateTestWithPlatform(
 }
 
 func TestInitStorageClusterResourcesCreationOnAllPlatforms(t *testing.T) {
-	allPlatforms := append(ValidCloudPlatforms,
-		PlatformUnknown, CloudPlatformType("NonCloudPlatform"))
+	allPlatforms := append(ValidCloudPlatforms, PlatformUnknown)
 	for _, eachPlatform := range allPlatforms {
 		initStorageClusterResourceCreateUpdateTestWithPlatform(
 			t, &CloudPlatform{platform: eachPlatform}, nil)
@@ -202,7 +201,7 @@ func createUpdateRuntimeObjects(cp *CloudPlatform) []runtime.Object {
 	}
 	updateRTObjects := []runtime.Object{csfs, csrbd, cfs, cbp}
 
-	if !isValidCloudPlatform(cp.platform) {
+	if !IsKnownCloudPlatform(cp.platform) {
 		csobc := &storagev1.StorageClass{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "ocsinit-ceph-rgw",
@@ -212,7 +211,7 @@ func createUpdateRuntimeObjects(cp *CloudPlatform) []runtime.Object {
 	}
 
 	// Create 'cephobjectstoreuser' only for non-aws platforms
-	if cp.platform != PlatformAWS {
+	if !IsKnownCloudPlatform(cp.platform) {
 		cosu := &cephv1.CephObjectStoreUser{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "ocsinit-cephobjectstoreuser",
@@ -222,7 +221,7 @@ func createUpdateRuntimeObjects(cp *CloudPlatform) []runtime.Object {
 	}
 
 	// Create 'cephobjectstore' only for non-cloud platforms
-	if !isValidCloudPlatform(cp.platform) {
+	if !IsKnownCloudPlatform(cp.platform) {
 		cos := &cephv1.CephObjectStore{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "ocsinit-cephobjectstore",
@@ -235,8 +234,7 @@ func createUpdateRuntimeObjects(cp *CloudPlatform) []runtime.Object {
 }
 
 func TestInitStorageClusterResourcesUpdationOnAllPlatforms(t *testing.T) {
-	allPlatforms := append(ValidCloudPlatforms,
-		PlatformUnknown, CloudPlatformType("NonCloudPlatform"))
+	allPlatforms := append(ValidCloudPlatforms, PlatformUnknown)
 	for _, eachPlatform := range allPlatforms {
 		cp := &CloudPlatform{platform: eachPlatform}
 		initStorageClusterResourceCreateUpdateTestWithPlatform(
@@ -263,7 +261,7 @@ func assertExpectedResources(t assert.TestingT, reconciler ReconcileStorageClust
 	err = reconciler.client.Get(nil, request.NamespacedName, actualSc3)
 	// on a cloud platform, 'Get' should throw an error,
 	// as OBC StorageClass won't be created
-	if isValidCloudPlatform(reconciler.platform.platform) {
+	if IsKnownCloudPlatform(reconciler.platform.platform) {
 		// we should be expecting only 2 storage classes
 		assert.Equal(t, len(expected), 2)
 		assert.Error(t, err)
@@ -329,7 +327,7 @@ func assertExpectedResources(t assert.TestingT, reconciler ReconcileStorageClust
 	}
 	request.Name = "ocsinit-cephobjectstoreuser"
 	err = reconciler.client.Get(nil, request.NamespacedName, actualCosu)
-	if reconciler.platform.platform == PlatformAWS {
+	if IsKnownCloudPlatform(reconciler.platform.platform) {
 		assert.Error(t, err)
 	} else {
 		assert.NoError(t, err)
@@ -370,7 +368,7 @@ func assertExpectedResources(t assert.TestingT, reconciler ReconcileStorageClust
 	err = reconciler.client.Get(nil, request.NamespacedName, actualCos)
 	// for any cloud platform, 'cephobjectstore' should not be created
 	// 'Get' should have thrown an error
-	if isValidCloudPlatform(reconciler.platform.platform) {
+	if IsKnownCloudPlatform(reconciler.platform.platform) {
 		assert.Error(t, err)
 	} else {
 		assert.NoError(t, err)

@@ -14,6 +14,7 @@ import (
 	deploymanager "github.com/openshift/ocs-operator/pkg/deploy-manager"
 	storagev1 "k8s.io/api/storage/v1"
 	"k8s.io/apimachinery/pkg/types"
+
 	//"k8s.io/apimachinery/pkg/api/errors"
 	cephv1 "github.com/rook/rook/pkg/apis/ceph.rook.io/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -352,7 +353,7 @@ var _ = Describe("StorageClusterInitialization", func() {
 		})
 		Context("after", func() {
 			It("resources have been modified", func() {
-				if currentCloudPlatform != scController.PlatformAWS {
+				if !scController.IsKnownCloudPlatform(currentCloudPlatform) {
 					By("Modifying CephObjectStore")
 					cephObjectStoreModify(false)
 					By("Modifying CephObjectStoreUser")
@@ -371,7 +372,7 @@ var _ = Describe("StorageClusterInitialization", func() {
 
 				By("Verifying StorageClass is reconciled")
 				storageClassExpectReconcile(false)
-				if currentCloudPlatform != scController.PlatformAWS {
+				if !scController.IsKnownCloudPlatform(currentCloudPlatform) {
 					By("Verifying CephObjectStore is reconciled")
 					cephObjectStoreExpectReconcile(false)
 					By("Verifying CephObjectStoreUser is reconciled")
@@ -385,7 +386,7 @@ var _ = Describe("StorageClusterInitialization", func() {
 			})
 
 			It("resources have been deleted", func() {
-				if currentCloudPlatform != scController.PlatformAWS {
+				if !scController.IsKnownCloudPlatform(currentCloudPlatform) {
 					By("Modifying CephObjectStore")
 					cephObjectStoreModify(true)
 					By("Modifying CephObjectStoreUser")
@@ -404,7 +405,7 @@ var _ = Describe("StorageClusterInitialization", func() {
 
 				By("Verifying StorageClass is reconciled")
 				storageClassExpectReconcile(true)
-				if currentCloudPlatform != scController.PlatformAWS {
+				if !scController.IsKnownCloudPlatform(currentCloudPlatform) {
 					By("Verifying CephObjectStore is reconciled")
 					cephObjectStoreExpectReconcile(true)
 					By("Verifying CephObjectStoreUser is reconciled")
